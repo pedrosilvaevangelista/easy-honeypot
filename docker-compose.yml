@@ -1,0 +1,51 @@
+services:
+  backend:
+    build: ./backend
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend/app/data:/app/app/data
+    environment:
+      - SQLALCHEMY_DATABASE_URL=sqlite:////app/app/data/attempts.db
+    networks:
+      - honeynet
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:8000/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+      - REACT_APP_API_URL=http://${HOST_IP:-localhost}:8000
+      - WDS_SOCKET_HOST=0.0.0.0
+      - WDS_SOCKET_PORT=3000
+      - REACT_APP_HOST_IP=${HOST_IP:-localhost}
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - honeynet
+
+  honeypot:
+    build: ./honeypot
+    ports:
+      - "2222:2222"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - honeynet
+    restart: unless-stopped
+
+networks:
+  honeynet:
+    driver: bridge

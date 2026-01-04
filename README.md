@@ -1,172 +1,180 @@
 # 🍯 Easy Honeypot
 
-Um honeypot SSH simples e eficaz para detectar tentativas de conexão e escaneamento de rede. Sistema completo com interface web para monitoramento em tempo real.
+A simple and effective SSH honeypot to detect connection attempts and network scanning. Complete system with a web interface for real-time monitoring.
 
-## 📋 Descrição
+## 📋 Description
 
-Este honeypot simula um servidor SSH na porta 2222 e registra automaticamente todas as tentativas de conexão, permitindo identificar possíveis atacantes, bots ou scanners de rede. Ideal para detectar atividades suspeitas em sua rede.
+This honeypot simulates an SSH server on port 2222 and automatically logs all connection attempts, allowing you to identify potential attackers, bots, or network scanners. Ideal for detecting suspicious activity on your network.
 
-## 🏗️ Arquitetura
+## 🏗️ Architecture
 
-O sistema é composto por 3 containers Docker que se comunicam:
+The system is composed of 3 Docker containers that communicate with each other:
 
-- **🐍 Backend (FastAPI)**: API REST para armazenar e consultar tentativas de conexão
-- **⚛️ Frontend (React)**: Interface web moderna para visualização dos dados
-- **🍯 Honeypot (Python)**: Servidor SSH falso que captura tentativas de conexão
+* **🐍 Backend (FastAPI)**: REST API to store and query connection attempts
+* **⚛️ Frontend (React)**: Modern web interface for data visualization
+* **🍯 Honeypot (Python)**: Fake SSH server that captures connection attempts
 
-## ✨ Funcionalidades
+## ✨ Features
 
-- ✅ Captura automática de tentativas de conexão SSH
-- 📊 Dashboard web em tempo real
-- 📈 Estatísticas de ataques (total de tentativas e IPs únicos)
-- 🔄 Atualização automática dos dados
-- 📱 Interface responsiva
-- 🐳 Fácil deployment com Docker
+* ✅ Automatic capture of SSH connection attempts
+* 📊 Real-time web dashboard
+* 📈 Attack statistics (total attempts and unique IPs)
+* 🔄 Automatic data refresh
+* 📱 Responsive interface
+* 🐳 Easy deployment with Docker
 
-## 🚀 Instalação e Uso
+## 🚀 Installation and Usage
 
-### Pré-requisitos
+### Prerequisites
 
-- Docker
-- Docker Compose
-- git
+* Docker
+* Docker Compose
+* git
 
-### Passos para executar
+### Steps to run
 
-1. **Clone o repositório**:
+1. **Clone the repository**:
+
 ```bash
 git clone https://github.com/pedrosilvaevangelista/easy-honeypot.git
 cd easy-honeypot
 ```
 
-2. **Execute o script de inicialização**:
+2. **Run the startup script**:
+
 ```bash
 ./start.sh
 ```
 
-O script irá:
-- Detectar automaticamente o IP da máquina
-- Inicializar os containers Docker
-- Exibir as URLs de acesso
+The script will:
 
-### Acessando o sistema
+* Automatically detect the machine IP
+* Initialize the Docker containers
+* Display the access URLs
 
-Após a inicialização, você poderá acessar:
+### Accessing the system
 
-- **🌐 Interface Web**: `http://<ip-da-maquina>:3000`
-- **🔧 API**: `http://<ip-da-maquina>:8000`
-- **🍯 Honeypot SSH**: `<ip-da-maquina>:2222`
+After startup, you can access:
 
-## 🧪 Testando o Honeypot
+* **🌐 Web Interface**: `http://<machine-ip>:3000`
+* **🔧 API**: `http://<machine-ip>:8000`
+* **🍯 SSH Honeypot**: `<machine-ip>:2222`
 
-Para verificar se o sistema está funcionando, execute uma conexão SSH de teste:
+## 🧪 Testing the Honeypot
 
-### No Windows (CMD/PowerShell):
+To verify that the system is working, perform a test SSH connection:
+
+### On Windows (CMD/PowerShell):
+
 ```cmd
-ssh -p 2222 usuario@ip-da-maquina
+ssh -p 2222 user@machine-ip
 ```
 
-### No Linux/macOS:
+### On Linux/macOS:
+
 ```bash
-ssh -p 2222 usuario@ip-da-maquina
-# ou
-telnet ip-da-maquina 2222
-# ou usando netcat
-nc ip-da-maquina 2222
+ssh -p 2222 user@machine-ip
+# or
+telnet machine-ip 2222
+# or using netcat
+nc machine-ip 2222
 ```
 
-### Exemplo de simulação:
+### Simulation example:
+
 ```bash
-# Teste simulando scanner
-nmap -p 2222 <ip-da-maquina>
+# Test simulating a scanner
+nmap -p 2222 <machine-ip>
 ```
 
-Após executar qualquer um desses comandos, você deverá ver a tentativa registrada na interface web.
+After running any of these commands, you should see the attempt registered in the web interface.
 
-## 📊 Interface Web
+## 📊 Web Interface
 
-O dashboard fornece:
+The dashboard provides:
 
-- **📈 Estatísticas gerais**: Total de tentativas e IPs únicos
-- **📋 Lista de tentativas**: Histórico detalhado com IP, dados da conexão e timestamp
-- **🔄 Atualização automática**: Dados atualizados a cada 10 segundos
-- **🎯 Status em tempo real**: Indicador de funcionamento do sistema
+* **📈 General statistics**: Total attempts and unique IPs
+* **📋 Attempt list**: Detailed history with IP, connection data, and timestamp
+* **🔄 Automatic refresh**: Data updated every 10 seconds
+* **🎯 Real-time status**: System health indicator
 
+## 🔧 Advanced Configuration
 
-## 🔧 Configuração Avançada
+### Customizing the honeypot port
 
-### Personalizando a porta do honeypot
-
-Para alterar a porta padrão (2222), edite o arquivo `honeypot/honeypot_ssh.py`:
+To change the default port (2222), edit the file `honeypot/honeypot_ssh.py`:
 
 ```python
-PORT = 2222  # Altere para a porta desejada
+PORT = 2222  # Change to the desired port
 ```
 
-### Configurando logging
+### Logging configuration
 
-Os logs são automaticamente salvos e podem ser visualizados com:
+Logs are automatically saved and can be viewed with:
 
 ```bash
-# Ver logs do honeypot
+# View honeypot logs
 docker-compose logs honeypot
 
-# Ver logs do backend
+# View backend logs
 docker-compose logs backend
 
-# Ver todos os logs
+# View all logs
 docker-compose logs -f
 ```
 
-## 🛡️ Segurança
+## 🛡️ Security
 
-⚠️ **Avisos importantes**:
+⚠️ **Important warnings**:
 
-- Este honeypot é apenas para **detecção e monitoramento**
-- Não fornece proteção ativa contra ataques
-- Execute apenas em ambientes controlados
-- Monitore regularmente os logs para atividades suspeitas
-- Considere implementar rate limiting para evitar DoS
+* This honeypot is for **detection and monitoring only**
+* It does not provide active protection against attacks
+* Run only in controlled environments
+* Regularly monitor logs for suspicious activity
+* Consider implementing rate limiting to avoid DoS
 
 ## 🐛 Troubleshooting
 
-### Container não inicia
+### Container does not start
+
 ```bash
-# Verificar logs detalhados
+# Check detailed logs
 docker-compose logs
 
-# Reconstruir imagens
+# Rebuild images
 docker-compose build --no-cache
 ```
 
-### Frontend não carrega dados
+### Frontend does not load data
+
 ```bash
-# Verificar se o backend está acessível
+# Check if backend is accessible
 curl http://localhost:8000/health
 
-# Verificar configuração de rede
+# Check network configuration
 docker-compose ps
 ```
 
-### Tentativas não aparecem no dashboard
+### Attempts do not appear on the dashboard
+
 ```bash
-# Verificar logs do honeypot
+# Check honeypot logs
 docker-compose logs honeypot
 
-# Testar conectividade do honeypot
+# Test honeypot connectivity
 telnet localhost 2222
 ```
 
-## 🤝 Contribuindo
+## 🤝 Contributing
 
-1. Fork o projeto
-2. Crie uma branch para sua feature
-3. Commit suas mudanças
-4. Push para a branch
-5. Abra um Pull Request
+1. Fork the project
+2. Create a branch for your feature
+3. Commit your changes
+4. Push to the branch
+5. Open a Pull Request
 
 ---
 
-**📧 Suporte**: Para dúvidas ou problemas, abra uma issue no repositório.
+**📧 Support**: For questions or issues, open an issue in the repository.
 
-**⭐ Star**: Se este projeto foi útil para você, considere dar uma estrela!
+**⭐ Star**: If this project was useful to you, consider giving it a star.
